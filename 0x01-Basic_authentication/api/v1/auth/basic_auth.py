@@ -2,8 +2,10 @@
 """Basic authentication module the API.
 """
 import base64
-from .auth import Auth
+from typing import TypeVar
 
+from .auth import Auth
+from models.user import User
 class BasicAuth(Auth):
     """Basic authentication class.
     """
@@ -49,3 +51,16 @@ class BasicAuth(Auth):
         return (email, password)
 
         
+    def user_object_from_credentials(self, user_email: str, user_pwd: str) -> TypeVar('User'):
+        """Retrieves a user based on the user's authentication credentials.
+        """
+        if type(user_email) == str and type(user_pwd) == str:
+            try:
+               users = User.search({'email': 'user_emaail'})
+            except Exception:
+                 return None
+            if len(users) <= 0:
+                return None
+            if users[0].is_valid_password(user_pwd):
+                return users[0]
+        return None
