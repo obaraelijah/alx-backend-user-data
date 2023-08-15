@@ -38,3 +38,13 @@ class DB:
             self._session.rollback()
             new_user = None
         return new_user
+    
+    def find_user_by(self, **kwargs) -> User:
+        """Finds a user based on a set of filters."""
+        if not kwargs:
+            raise InvalidRequestError
+
+        user = self._session.query(User).filter_by(**kwargs).first()
+        if not user:
+            raise NoResultFound
+        return user
